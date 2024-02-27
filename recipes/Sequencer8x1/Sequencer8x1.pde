@@ -10,9 +10,9 @@ NetAddress ledAddress = new NetAddress("192.168.0.114", 54321);
 float bpm = 120;
 float interval = 60 * 1000 / bpm;
 int pMillis = -1;
-int beatIndex = 0;
+int currentStep = 0;
 // ステップの状態
-boolean[] beats;
+boolean[] steps;
 // 現在のステップのLEDの色
 color currentStepLedColor = color(255, 0, 0);
 // アクティブなステップの色
@@ -32,19 +32,19 @@ void setup() {
   addresses[6] = new NetAddress("192.168.0.107", 54321);
   addresses[7] = new NetAddress("192.168.0.108", 54321);
   // ステップの状態を初期化
-  beats = new boolean[addresses.length];
-  for (int i = 0; i < beats.length; i++) {
-    beats[i] = false;
+  steps = new boolean[addresses.length];
+  for (int i = 0; i < steps.length; i++) {
+    steps[i] = false;
   }
 }
 
 void draw() {
   background(0);
   // ステップの状態を描画
-  float w = width / beats.length;
-  for (int i = 0; i < beats.length; i++) {
+  float w = width / steps.length;
+  for (int i = 0; i < steps.length; i++) {
     strokeWeight(1);
-    if (beats[i]) {
+    if (steps[i]) {
       stroke(inactiveStepLedColor);
       fill(activeStepLedColor);
     } else {
@@ -57,7 +57,7 @@ void draw() {
   strokeWeight(3);
   stroke(currentStepLedColor);
   noFill();
-  rect(w * beatIndex, 0, w, 100);
+  rect(w * currentStep, 0, w, 100);
   // 現在のBPMを描画
   noStroke();
   fill(255);
@@ -68,14 +68,14 @@ void draw() {
   int now = millis();
   if (now - pMillis > interval) {
     // もし現在のステップがtrueならOSCを送信する
-    if (beats[beatIndex]) {
+    if (steps[currentStep]) {
       OscMessage message = new OscMessage("/bang");
-      oscP5.send(message, addresses[beatIndex]);
-      println(addresses[beatIndex], message);
+      oscP5.send(message, addresses[currentStep]);
+      println(addresses[currentStep], message);
     }
-    beatIndex++;
-    if (beatIndex >= beats.length) {
-      beatIndex = 0;
+    currentStep++;
+    if (currentStep >= steps.length) {
+      currentStep = 0;
     }
     pMillis = millis();
   }
@@ -92,14 +92,14 @@ void sendLedColors() {
   int totalLedNum = boxNum * ledNumContainsBox;
   OscMessage msg = new OscMessage("/light");
   for (int i = 0; i < totalLedNum; i++) {
-    if (ledNumContainsBox * beatIndex <= i && i < ledNumContainsBox * beatIndex + ledNumContainsBox) {
+    if (ledNumContainsBox * currentStep <= i && i < ledNumContainsBox * currentStep + ledNumContainsBox) {
       // *** 現在のステップの色 ***
       int r = (int)red(currentStepLedColor);
       int g = (int)green(currentStepLedColor);
       int b = (int)blue(currentStepLedColor);
       int c = (r << 16) + (g << 8) + b;
       msg.add(c);
-    } else if (beats[floor(i / ledNumContainsBox)]) {
+    } else if (steps[floor(i / ledNumContainsBox)]) {
       // *** アクティブなステップの色 ***
       int r = (int)red(activeStepLedColor);
       int g = (int)green(activeStepLedColor);
@@ -122,11 +122,11 @@ void sendLedColors() {
  * マウスをクリックした時の処理
  */
 void mousePressed() {
-  float w = width / beats.length;
-  for (int i = 0; i < beats.length; i++) {
+  float w = width / steps.length;
+  for (int i = 0; i < steps.length; i++) {
     if (w * i < mouseX && mouseX < w * i + w) {
       if (0 < mouseY && mouseY < 100) {
-        beats[i] = !beats[i];
+        steps[i] = !steps[i];
         break;
       }
     }
