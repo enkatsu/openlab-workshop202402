@@ -6,3 +6,4 @@
 - [recipes](./recipes): 制作時のアイディア出し用レシピ
 - [ProcessingSender](./ProcessingSender): Processingの通信テスト用ソースコード
 - [fig](./fig): スライドに使った画像データ
+- [sounds](./sounds): 音データ
