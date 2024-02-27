@@ -8,7 +8,7 @@ NetAddress[] left = new NetAddress[3];
 NetAddress[] right = new NetAddress[3];
 NetAddress[] doncama = new NetAddress[2];
 // LEDを制御しているM5StickCのアドレス
-NetAddress ledAddress = new NetAddress("192.168.0.114", 54321);
+NetAddress ledAddress = new NetAddress("192.168.0.100", 54321);
 // この数値が高くなるとテンポが速くなる（Beats Per Minute, 1分に何拍打つか）
 float bpm = 120;
 float interval = 60 * 1000 / bpm;
