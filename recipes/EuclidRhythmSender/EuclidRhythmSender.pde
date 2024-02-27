@@ -1,3 +1,4 @@
+import processing.sound.*;
 import oscP5.*;
 import netP5.*;
 
@@ -11,6 +12,9 @@ float interval = 60 * 1000 / bpm;
 int pMillis = -1;
 int beatIndex = 0;
 boolean[] beats;
+// マシンから音を鳴らす場合はこれをtrueにする
+boolean playSound = false;
+SoundFile sound;
 
 void setup() {
   size(800, 150);
@@ -27,6 +31,8 @@ void setup() {
   addresses[5] = new NetAddress("192.168.0.106", 54321);
   addresses[6] = new NetAddress("192.168.0.107", 54321);
   addresses[7] = new NetAddress("192.168.0.108", 54321);
+
+  sound = new SoundFile(this, "../../sounds/snare.wav");
 }
 
 void draw() {
@@ -43,12 +49,12 @@ void draw() {
     }
     rect(w * i, 0, w, 100);
   }
-  
+
   strokeWeight(3);
   stroke(255, 0, 0);
   noFill();
   rect(w * beatIndex, 0, w, 100);
-  
+
   noStroke();
   fill(255);
   textSize(20);
@@ -56,14 +62,17 @@ void draw() {
 
   int now = millis();
   if (now - pMillis > interval) {
+    beatIndex++;
+    if (beatIndex >= beats.length) {
+      beatIndex = 0;
+    }
     if (beats[beatIndex]) {
       OscMessage message = new OscMessage("/bang");
       oscP5.send(message, addresses[beatIndex]);
       println(addresses[beatIndex], message);
-    }
-    beatIndex++;
-    if (beatIndex >= beats.length) {
-      beatIndex = 0;
+      if (playSound) {
+        sound.play();
+      }
     }
     pMillis = millis();
   }

@@ -1,3 +1,4 @@
+import processing.sound.*;
 import oscP5.*;
 import netP5.*;
 
@@ -19,6 +20,9 @@ color currentStepLedColor = color(255, 0, 0);
 color activeStepLedColor = color(255, 255, 255);
 // 非アクティブなステップの色（color(0, 0, 0)は黒なので光らない）
 color inactiveStepLedColor = color(0, 0, 0);
+// マシンから音を鳴らす場合はこれをtrueにする
+boolean playSound = false;
+SoundFile[] sounds;
 
 void setup() {
   size(400, 300);
@@ -38,6 +42,10 @@ void setup() {
       steps[i][j] = false;
     }
   }
+
+  sounds = new SoundFile[2];
+  sounds[0] = new SoundFile(this, "../../sounds/snare.wav");
+  sounds[1] = new SoundFile(this, "../../sounds/kick.wav");
 }
 
 void draw() {
@@ -75,17 +83,18 @@ void draw() {
   // *** ステップを次に進める処理 ***
   int now = millis();
   if (now - pMillis > interval) {
+    currentStep++;
+    if (currentStep >= steps.length) {
+      currentStep = 0;
+    }
     for (int i = 0; i < steps[currentStep].length; i++) {
       // もし現在のステップがtrueならOSCを送信する
       if (steps[currentStep][i]) {
         OscMessage message = new OscMessage("/bang");
         oscP5.send(message, addresses[currentStep]);
         println(addresses[currentStep], message);
+        sounds[i].play();
       }
-    }
-    currentStep++;
-    if (currentStep >= steps.length) {
-      currentStep = 0;
     }
     pMillis = millis();
   }
