@@ -2,7 +2,6 @@ import processing.sound.*;
 import oscP5.*;
 import netP5.*;
 
-
 OscP5 oscP5;
 // ロボティックドラムマシンのM5StickCのアドレス
 NetAddress[] left = new NetAddress[3];
@@ -25,6 +24,8 @@ color inactiveDoncamaLedColor = color(0, 0, 0);
 boolean leftIsCurrent = true;
 int leftState = 2;
 int rightState = 0;
+// マシンから音を鳴らす場合はこれをtrueにする
+boolean playSound = false;
 SoundFile[] sounds;
 
 void setup() {
@@ -38,7 +39,7 @@ void setup() {
   right[2] = new NetAddress("192.168.0.107", 54321);
   doncama[0] = new NetAddress("192.168.0.104", 54321);
   doncama[1] = new NetAddress("192.168.0.108", 54321);
-  
+
   sounds = new SoundFile[3];
   sounds[0] = new SoundFile(this, "../../sounds/kick.wav");
   sounds[1] = new SoundFile(this, "../../sounds/ch.wav");
@@ -74,22 +75,30 @@ void draw() {
     leftIsCurrent = !leftIsCurrent;
     if (leftIsCurrent) {
       leftState = (6 - (leftState + rightState)) % 3;
+      
       OscMessage message = new OscMessage("/bang");
       oscP5.send(message, left[leftState]);
       println(left[leftState], message);
       OscMessage doncamaMessage = new OscMessage("/bang");
       oscP5.send(doncamaMessage, doncama[0]);
       println(doncama[0], doncamaMessage);
-      sounds[leftState].play();
+
+      if (playSound) {
+        sounds[leftState].play();
+      }
     } else {
       rightState = (6 - (rightState + leftState)) % 3;
+      
       OscMessage message = new OscMessage("/bang");
       oscP5.send(message, right[rightState]);
       println(right[rightState], message);
       OscMessage doncamaMessage = new OscMessage("/bang");
       oscP5.send(doncamaMessage, doncama[1]);
       println(doncama[1], doncamaMessage);
-      sounds[rightState].play();
+      
+      if (playSound) {
+        sounds[rightState].play();
+      }
     }
     pMillis = millis();
   }
