@@ -21,7 +21,6 @@ color activeStepLedColor = color(255, 255, 255);
 color inactiveStepLedColor = color(0, 0, 0);
 
 void setup() {
-  println(0 / 2);
   size(400, 300);
   oscP5 = new OscP5(this, "127.0.0.1", 54445, OscP5.UDP);
   addresses[0] = new NetAddress("192.168.0.101", 54321);
