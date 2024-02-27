@@ -1,5 +1,7 @@
+import processing.sound.*;
 import oscP5.*;
 import netP5.*;
+
 
 OscP5 oscP5;
 // ロボティックドラムマシンのM5StickCのアドレス
@@ -23,6 +25,7 @@ color inactiveDoncamaLedColor = color(0, 0, 0);
 boolean leftIsCurrent = true;
 int leftState = 2;
 int rightState = 0;
+SoundFile[] sounds;
 
 void setup() {
   size(400, 300);
@@ -35,28 +38,30 @@ void setup() {
   right[2] = new NetAddress("192.168.0.107", 54321);
   doncama[0] = new NetAddress("192.168.0.104", 54321);
   doncama[1] = new NetAddress("192.168.0.108", 54321);
+  
+  sounds = new SoundFile[3];
+  sounds[0] = new SoundFile(this, "../../sounds/kick.wav");
+  sounds[1] = new SoundFile(this, "../../sounds/ch.wav");
+  sounds[2] = new SoundFile(this, "../../sounds/snare.wav");
 }
 
 void draw() {
   background(0);
   float w = width / 4;
+  // 全てのグリッドを描画
+  fill(0);
+  stroke(255);
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 2; j++) {
-      float x = w * i;
-      float y = w * j;
-      fill(0);
-      stroke(255);
-      rect(x, y, w, w);
+      rect(w * i, w * j, w, w);
     }
   }
-
+  // アクティブな手を描画
   fill(0);
   stroke(activeHandLedColor);
-  if (leftIsCurrent) {
-    rect(leftState * w, 0, w, w);
-  } else {
-    rect(rightState * w, w, w, w);
-  }
+  rect(leftState * w, 0, w, w);
+  rect(rightState * w, w, w, w);
+  // メトロノームのグリッドを描画
   stroke(activeDoncamaLedColor);
   if (leftIsCurrent) {
     rect(3 * w, 0, w, w);
@@ -66,28 +71,27 @@ void draw() {
 
   int now = millis();
   if (now - pMillis > interval) {
+    leftIsCurrent = !leftIsCurrent;
     if (leftIsCurrent) {
       leftState = (6 - (leftState + rightState)) % 3;
-    } else {
-      rightState = (6 - (rightState + leftState)) % 3;
-    }
-    if (leftIsCurrent) {
       OscMessage message = new OscMessage("/bang");
       oscP5.send(message, left[leftState]);
       println(left[leftState], message);
       OscMessage doncamaMessage = new OscMessage("/bang");
       oscP5.send(doncamaMessage, doncama[0]);
       println(doncama[0], doncamaMessage);
+      sounds[leftState].play();
     } else {
+      rightState = (6 - (rightState + leftState)) % 3;
       OscMessage message = new OscMessage("/bang");
       oscP5.send(message, right[rightState]);
       println(right[rightState], message);
       OscMessage doncamaMessage = new OscMessage("/bang");
       oscP5.send(doncamaMessage, doncama[1]);
       println(doncama[1], doncamaMessage);
+      sounds[rightState].play();
     }
     pMillis = millis();
-    leftIsCurrent = !leftIsCurrent;
   }
 
   sendLedColors();
