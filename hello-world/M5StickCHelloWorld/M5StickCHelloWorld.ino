@@ -1,9 +1,9 @@
 #include <ArduinoOSCWiFi.h>
 #include <M5StickC.h>
 
-const char* ssid = "YOUR_SSID";           // 接続するWi-FiのSSID
-const char* pwd = "";                     // 接続するWi-Fiのパスワード
-const int recvPort = 54321;               // OSCのポート番号
+const char* ssid = "YOUR_SSID"; // 接続するWi-FiのSSID
+const char* pwd = "";           // 接続するWi-Fiのパスワード
+const int recvPort = 54321;     // OSCのポート番号
 
 void onOscReceived(const OscMessage& m);
 void connectWiFi();

@@ -12,8 +12,22 @@ const char* ssid = "YOUR_SSID";
 const char* pwd = "";
 const int recvPort = 54321;
 
+void onOscReceived(const OscMessage& m);
+void connectWiFi();
+
+void setup() {
+  M5.begin();
+  Serial.begin(115200);
+  delay(5000);
+  connectWiFi();
+  OscWiFi.subscribe(recvPort, "/bang", onOscReceived);
+}
+
+void loop() {
+  OscWiFi.update();
+}
+
 void onOscReceived(const OscMessage& m) {
-  int val = m.arg<int>(0);
   Serial.print(m.remoteIP());
   Serial.print(" ");
   Serial.print(m.remotePort());
@@ -64,16 +78,4 @@ void connectWiFi() {
   M5.Lcd.println(WiFi.localIP().toString());
   M5.Lcd.println(WiFi.macAddress());
   stepper.setSpeed(sp_speed);
-}
-
-void setup() {
-  M5.begin();
-  Serial.begin(115200);
-  delay(5000);
-  connectWiFi();
-  OscWiFi.subscribe(recvPort, "/bang", onOscReceived);
-}
-
-void loop() {
-  OscWiFi.update();
 }
