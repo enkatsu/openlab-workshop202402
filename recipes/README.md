@@ -31,8 +31,8 @@ flowchart
 
     loopStart --> incStep
     incStep --> ifCsOver
-    ifCsOver -->|Yes| resetCs --> ifStepTrue
-    ifCsOver -->|No| ifStepTrue
-    ifStepTrue --> |Yes| sendOsc --> incStep
-    ifStepTrue --> |No| incStep
+    ifCsOver -->|true| resetCs --> ifStepTrue
+    ifCsOver -->|false| ifStepTrue
+    ifStepTrue --> |true| sendOsc --> incStep
+    ifStepTrue --> |false| incStep
 ```
