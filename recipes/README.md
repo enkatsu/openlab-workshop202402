@@ -4,6 +4,7 @@
 - [Sequencer2x4](Sequencer2x4): 2トラック4ステップのシーケンサー
 - [Jaikenzan](Jaikenzan): じゃいけんざん
 - [EuclidRhythmSender](EuclidRhythmSender): ユークリッドのリズム
+- [CellularAutomaton](CellularAutomaton): ルール110セル・オートマトン
 
 ## シーケンサーのフローチャート
 
