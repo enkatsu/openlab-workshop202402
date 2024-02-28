@@ -17,11 +17,11 @@ flowchart
         loopStart[drawループの先頭]
         subgraph ステップ制御処理
             incStep[ステップを一つ進める]
-            ifCsOver{もし現在のステップが範囲外なら}
+            ifCsOver{もし現在のステップが\n範囲外なら}
             resetCs[ステップを0にする]
         end
         subgraph OSCの送信処理
-            ifStepTrue{もし現在のステップがアクティブなら}
+            ifStepTrue{もし現在のステップが\nアクティブなら}
             sendOsc[OSCを送信]
         end
     end
