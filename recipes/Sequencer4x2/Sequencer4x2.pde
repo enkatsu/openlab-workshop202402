@@ -49,6 +49,7 @@ void setup() {
 }
 
 void draw() {
+  // *** グリッドの描画 ***
   background(0);
   // ステップの状態を描画
   float w = width / steps.length;

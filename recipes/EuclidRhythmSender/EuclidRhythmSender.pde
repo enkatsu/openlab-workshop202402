@@ -36,6 +36,7 @@ void setup() {
 }
 
 void draw() {
+  // *** グリッドの描画 ***
   background(0);
   float w = width / beats.length;
   for (int i = 0; i < beats.length; i++) {
@@ -49,12 +50,12 @@ void draw() {
     }
     rect(w * i, 0, w, 100);
   }
-
+  // 現在のステップの描画
   strokeWeight(3);
   stroke(255, 0, 0);
   noFill();
   rect(w * beatIndex, 0, w, 100);
-
+  // BPMのステップの描画
   noStroke();
   fill(255);
   textSize(20);

@@ -19,6 +19,7 @@ flowchart
     end
     subgraph draw["draw()"]
         loopStart[drawループの先頭]
+        drawGrid["グリッドの描画"]
         subgraph ステップを進める処理
             incStep["ステップを一つ進める
                 currentStep++;"]
@@ -40,7 +41,7 @@ flowchart
     initCs --> initStep
     initStep --> loopStart
 
-    loopStart --> incStep
+    loopStart --> drawGrid --> incStep
     incStep --> ifCsOver
     ifCsOver -->|true| resetCs --> ifStepTrue
     ifCsOver -->|false| ifStepTrue
