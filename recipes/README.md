@@ -1,7 +1,7 @@
 # 制作時のレシピ
 
-- [Sequencer8x1](Sequencer8x1): 8ステップ1パートのシーケンサ
-- [Sequencer4x2](Sequencer4x2): 4ステップ2パートのシーケンサ
+- [Sequencer8x1](Sequencer8x1): 1トラック8ステップのシーケンサー
+- [Sequencer4x2](Sequencer4x2): 2トラック4ステップのシーケンサー
 - [Jaikenzan](Jaikenzan): じゃいけんざん
 - [EuclidRhythmSender](EuclidRhythmSender): ユークリッドのリズム
 
