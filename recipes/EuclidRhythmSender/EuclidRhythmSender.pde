@@ -60,6 +60,7 @@ void draw() {
   textSize(20);
   text("BPM: " + bpm + ", E(" + euclidRythmN + ", " + euclidRythmLen + ")", 20, 130);
 
+  // *** ステップ制御処理 ***
   int now = millis();
   if (now - pMillis > interval) {
     beatIndex++;
