@@ -19,7 +19,7 @@ flowchart
     end
     subgraph draw["draw()"]
         loopStart[drawループの先頭]
-        subgraph ステップ制御処理
+        subgraph ステップを進める処理
             incStep["ステップを一つ進める
                 currentStep++;"]
             ifCsOver{"もし現在のステップが範囲外なら

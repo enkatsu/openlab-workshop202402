@@ -70,9 +70,9 @@ void draw() {
   textSize(20);
   text("BPM: " + bpm, 20, 130);
 
-  // *** ステップ制御処理 ***
   int now = millis();
   if (now - pMillis > interval) {
+    // *** ステップを進める処理 ***
     currentStep++;
     if (currentStep >= steps.length) {
       currentStep = 0;
