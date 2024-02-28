@@ -77,7 +77,7 @@ void draw() {
     if (currentStep >= steps.length) {
       currentStep = 0;
     }
-    // もし現在のステップがtrueならOSCを送信する
+    // *** OSCの送信処理 ***
     if (steps[currentStep]) {
       OscMessage message = new OscMessage("/bang");
       oscP5.send(message, addresses[currentStep]);

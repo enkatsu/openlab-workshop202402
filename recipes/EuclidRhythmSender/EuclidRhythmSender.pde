@@ -60,13 +60,14 @@ void draw() {
   textSize(20);
   text("BPM: " + bpm + ", E(" + euclidRythmN + ", " + euclidRythmLen + ")", 20, 130);
 
-  // *** ステップ制御処理 ***
   int now = millis();
   if (now - pMillis > interval) {
+    // *** ステップを進める処理 ***
     beatIndex++;
     if (beatIndex >= beats.length) {
       beatIndex = 0;
     }
+    // *** OSCの送信処理 ***
     if (beats[beatIndex]) {
       OscMessage message = new OscMessage("/bang");
       oscP5.send(message, addresses[beatIndex]);
