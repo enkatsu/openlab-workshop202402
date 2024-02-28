@@ -12,19 +12,28 @@ flowchart
     classDef ta-left text-center: left;
 
     subgraph setup["setup()"]
-        initCs[現在のステップを0にする]
-        initStep[すべてのステップを非アクティブにする]
+        initCs["現在のステップを0にする
+            int currentStep = 0;"]
+        initStep["すべてのステップを非アクティブにする
+            for (int i = 0; i < steps.length; i++) { steps[i] = false; }"]
     end
     subgraph draw["draw()"]
         loopStart[drawループの先頭]
         subgraph ステップ制御処理
-            incStep[ステップを一つ進める]
-            ifCsOver{もし現在のステップが\n範囲外なら}:::ta-center
-            resetCs[ステップを0にする]
+            incStep["ステップを一つ進める
+                currentStep++;"]
+            ifCsOver{"もし現在のステップが範囲外なら
+                if (currentStep >= steps.length)"}:::ta-center
+            resetCs["ステップを0にする
+                currentStep = 0;"]
         end
         subgraph OSCの送信処理
-            ifStepTrue{もし現在のステップが\nアクティブなら}:::ta-center
-            sendOsc[OSCを送信]
+            ifStepTrue{"もし現在のステップがアクティブなら
+                if (steps[currentStep])"}:::ta-center
+            sendOsc["OSCを送信
+                OscMessage message = new OscMessage(/bang);
+                oscP5.send(message, addresses[currentStep]);
+                println(addresses[currentStep], message);"]
         end
     end
 
@@ -35,6 +44,6 @@ flowchart
     incStep --> ifCsOver
     ifCsOver -->|true| resetCs --> ifStepTrue
     ifCsOver -->|false| ifStepTrue
-    ifStepTrue --> |true| sendOsc --> incStep
-    ifStepTrue --> |false| incStep
+    ifStepTrue --> |true| sendOsc --> loopStart
+    ifStepTrue --> |false| loopStart
 ```
