@@ -9,6 +9,8 @@
 
 ```mermaid
 flowchart
+    classDef ta-left text-center: left;
+
     subgraph setup["setup()"]
         initCs[現在のステップを0にする]
         initStep[すべてのステップを非アクティブにする]
@@ -17,11 +19,11 @@ flowchart
         loopStart[drawループの先頭]
         subgraph ステップ制御処理
             incStep[ステップを一つ進める]
-            ifCsOver{もし現在のステップが\n範囲外なら}
+            ifCsOver{もし現在のステップが\n範囲外なら}:::ta-center
             resetCs[ステップを0にする]
         end
         subgraph OSCの送信処理
-            ifStepTrue{もし現在のステップが\nアクティブなら}
+            ifStepTrue{もし現在のステップが\nアクティブなら}:::ta-center
             sendOsc[OSCを送信]
         end
     end
