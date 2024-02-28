@@ -10,8 +10,8 @@ int euclidRythmLen = 8;
 float bpm = 120;
 float interval = 60 * 1000 / bpm;
 int pMillis = -1;
-int beatIndex = 0;
-boolean[] beats;
+int currentStep = 0;
+boolean[] steps;
 // マシンから音を鳴らす場合はこれをtrueにする
 boolean playSound = false;
 SoundFile sound;
@@ -19,8 +19,8 @@ SoundFile sound;
 void setup() {
   size(800, 150);
   EuclidRythmMachine erm = new EuclidRythmMachine(euclidRythmN, euclidRythmLen);
-  beats = erm.calcBeats();
-  printBeats(beats);
+  steps = erm.calcBeats();
+  printBeats(steps);
 
   oscP5 = new OscP5(this, "127.0.0.1", 54445, OscP5.UDP);
   addresses[0] = new NetAddress("192.168.0.101", 54321);
@@ -38,10 +38,10 @@ void setup() {
 void draw() {
   // *** グリッドの描画 ***
   background(0);
-  float w = width / beats.length;
-  for (int i = 0; i < beats.length; i++) {
+  float w = width / steps.length;
+  for (int i = 0; i < steps.length; i++) {
     strokeWeight(1);
-    if (beats[i]) {
+    if (steps[i]) {
       stroke(0);
       fill(255);
     } else {
@@ -54,7 +54,7 @@ void draw() {
   strokeWeight(3);
   stroke(255, 0, 0);
   noFill();
-  rect(w * beatIndex, 0, w, 100);
+  rect(w * currentStep, 0, w, 100);
   // BPMのステップの描画
   noStroke();
   fill(255);
@@ -64,15 +64,15 @@ void draw() {
   int now = millis();
   if (now - pMillis > interval) {
     // *** ステップを進める処理 ***
-    beatIndex++;
-    if (beatIndex >= beats.length) {
-      beatIndex = 0;
+    currentStep++;
+    if (currentStep >= steps.length) {
+      currentStep = 0;
     }
     // *** OSCの送信処理 ***
-    if (beats[beatIndex]) {
+    if (steps[currentStep]) {
       OscMessage message = new OscMessage("/bang");
-      oscP5.send(message, addresses[beatIndex]);
-      println(addresses[beatIndex], message);
+      oscP5.send(message, addresses[currentStep]);
+      println(addresses[currentStep], message);
       if (playSound) {
         sound.play();
       }
@@ -93,15 +93,15 @@ void keyPressed() {
   }
   interval = 60 * 1000 / bpm;
 
-  beatIndex = 0;
+  currentStep = 0;
   EuclidRythmMachine erm = new EuclidRythmMachine(euclidRythmN, euclidRythmLen);
-  beats = erm.calcBeats();
-  printBeats(beats);
+  steps = erm.calcBeats();
+  printBeats(steps);
 }
 
-void printBeats(boolean[] beats) {
-  for (int i = 0; i < beats.length; i++) {
-    if (beats[i]) {
+void printBeats(boolean[] steps) {
+  for (int i = 0; i < steps.length; i++) {
+    if (steps[i]) {
       print('*');
     } else {
       print('_');
