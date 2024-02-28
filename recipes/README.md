@@ -9,11 +9,11 @@
 
 ```mermaid
 flowchart
-    subgraph "setup()"
+    subgraph setup["setup()"]
         initCs[現在のステップを0にする]
         initStep[すべてのステップを非アクティブにする]
     end
-    subgraph "draw()"
+    subgraph draw["draw()"]
         loopStart[drawループの先頭]
         subgraph ステップ制御処理
             incStep[ステップを一つ進める]
