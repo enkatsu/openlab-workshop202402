@@ -6,7 +6,7 @@ OscP5 oscP5;
 // ロボティックドラムマシンのM5StickCのアドレス
 NetAddress[] addresses = new NetAddress[8];
 // LEDを制御しているM5StickCのアドレス
-NetAddress ledAddress = new NetAddress("192.168.0.100", 54321);
+NetAddress ledAddress = new NetAddress("192.168.0.109", 54321);
 // この数値が高くなるとテンポが速くなる（Beats Per Minute, 1分に何拍打つか）
 float bpm = 120;
 float interval = 60 * 1000 / bpm;

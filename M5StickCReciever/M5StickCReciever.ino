@@ -2,8 +2,8 @@
 #include <M5StickC.h>
 #include <Stepper.h>
 
-int sp_speed = 100; //回転スピード
-int sp_step = 100; //ステップ数
+int sp_speed = 80; //回転スピード
+int sp_step = 30; //ステップ数
 int round_step = 400;
 Stepper stepper(round_step, 32, 33, 26, 0);
 bool isRotated = false;
@@ -36,14 +36,13 @@ void onOscReceived(const OscMessage& m) {
   Serial.print(" ");
   Serial.print(m.address());
   Serial.print(" ");
-  Serial.print(val);
   Serial.println();
 
   if (!isRotated) {
     isRotated = true;
     stepper.step(sp_step);
     delay(10);
-    stepper.step(-sp_step / 2);
+    stepper.step(-sp_step);
     isRotated = false;
   }
 }
